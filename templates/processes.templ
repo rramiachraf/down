@@ -1,0 +1,55 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/rramiachraf/down/monitor"
+)
+
+css table() {
+	width: 100%;
+}
+
+css th() {
+	padding: 0.5rem;
+	background-color: #313244;
+	color: #cdd6f4;
+}
+
+css row() {
+	background-color: #45475a;
+	padding: 0.2rem;
+	color: #bac2de;
+}
+
+var header = []string{"PID", "USER", "GROUP", "PRIORITY", "NICE", "VIRT", "RES", "SHR", "STATUS", "NAME", "COMMAND"}
+
+templ processes(ps []monitor.Process) {
+	<table class={ table() }>
+		<thead>
+			<tr>
+				for _, label := range header {
+					<th class={ th() }>{ label }</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			for _, p := range ps {
+				if p.Command != "" {
+					<tr class={ row() }>
+						<td>{ p.ID }</td>
+						<td>{ p.Owner }</td>
+						<td>{ p.Group }</td>
+						<td>{ fmt.Sprintf("%d",p.Priority) }</td>
+						<td>{ fmt.Sprintf("%d",p.Nice) }</td>
+						<td>{ fmt.Sprintf("%d",p.VirtualMem) }</td>
+						<td>{ fmt.Sprintf("%d",p.ResidentMem) }</td>
+						<td>{ fmt.Sprintf("%d",p.SharedMem) }</td>
+						<td>{ string(p.Status) }</td>
+						<td>{ p.Name }</td>
+						<td>{ p.Command }</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+}

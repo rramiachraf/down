@@ -1,0 +1,17 @@
+package templates
+
+import (
+	"github.com/rramiachraf/down/monitor"
+)
+
+templ MainPage(m *monitor.Monitor) {
+	@layout("") {
+		@Monitor(m)
+		<script type="text/javascript">
+			const ws = new WebSocket("/ws")
+			ws.onmessage = function(msg) {
+				document.getElementById("container").innerHTML = msg.data
+			}
+		</script>
+	}
+}

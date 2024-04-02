@@ -1,0 +1,60 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/rramiachraf/down/monitor"
+)
+
+css info() {
+	color: #cdd6f4;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+css section() {
+	display: grid;
+	grid-template-columns: 10ch 1fr;
+	gap: 0.5rem;
+}
+
+css sectionItem() {
+	display: flex;
+	gap: 0.5rem;
+}
+
+templ Monitor(m *monitor.Monitor) {
+	<div class={ info() }>
+		<div class={ section() }>
+			<p>Memory: </p>
+			<div class={ sectionItem() }>
+				<p>{ fmt.Sprintf("%.2f GiB", monitor.ConvertToGib(m.Memory.CalculateUsed())) }</p>
+				<meter
+					min="0"
+					max={ fmt.Sprintf("%d", m.Memory.Total) }
+					value={ fmt.Sprintf("%d", m.Memory.CalculateUsed()) }
+					high={ fmt.Sprintf("%d", m.Memory.Total*80/100) }
+				></meter>
+				<p>{ fmt.Sprintf("%.2f GiB", monitor.ConvertToGib(m.Memory.Total)) }</p>
+			</div>
+		</div>
+		<div class={ section() }>
+			<p>Swap: </p>
+			<div class={ sectionItem() }>
+				<p>{ fmt.Sprintf("%.2f GiB", monitor.ConvertToGib(m.Memory.SwapTotal - m.Memory.SwapFree)) }</p>
+				<meter
+					min="0"
+					max={ fmt.Sprintf("%d", m.Memory.SwapTotal) }
+					value={ fmt.Sprintf("%d", m.Memory.SwapTotal-m.Memory.SwapFree) }
+					high={ fmt.Sprintf("%d", m.Memory.SwapTotal*80/100) }
+				></meter>
+				<p>{ fmt.Sprintf("%.2f GiB", monitor.ConvertToGib(m.Memory.SwapTotal)) }</p>
+			</div>
+		</div>
+		<div class={ section() }>
+			<p>Uptime: </p>
+			<p>{ monitor.FormatUptime(m.Uptime) }</p>
+		</div>
+	</div>
+	@processes(m.Processes)
+}

@@ -1,0 +1,44 @@
+package templates
+
+css body() {
+	min-height: 100vh;
+	padding: 0;
+	margin: 0;
+	font-family: Jetbrains Mono;
+	background-color: #11111b;
+}
+
+css container() {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem 0;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+templ layout(title string) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>{ title }</title>
+			<meta charset="utf-8"/>
+			<style>
+				* {
+					padding: 0;
+					margin: 0;
+				}
+
+				@font-face {
+					src: url("/static/fonts/variable/JetBrainsMono[wght].ttf");
+					font-family: "JetBrains Mono";
+				}
+			</style>
+		</head>
+		<body class={ body() }>
+			<div class={ container() } id="container">
+				{ children... }
+			</div>
+		</body>
+	</html>
+}
