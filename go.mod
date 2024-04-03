@@ -1,4 +1,4 @@
-module github.com/rramiachraf/down
+module github.com/rramiachraf/observe
 
 go 1.22.1
 

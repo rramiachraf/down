@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/rramiachraf/down/monitor"
-	"github.com/rramiachraf/down/templates"
+	"github.com/rramiachraf/observe/monitor"
+	"github.com/rramiachraf/observe/templates"
 )
 
 //go:embed static
