@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"embed"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net"
@@ -35,10 +36,9 @@ func startServer(listener net.Listener, lg *slog.Logger) error {
 		}
 	}()
 
-	handleMainPage := mainPageHandler{mt, lg}
-	mux.Handle("GET /", handleMainPage)
-	handleWS := wsHandler{mt, lg}
-	mux.Handle("GET /ws", handleWS)
+	mux.Handle("GET /", mainPageHandler{mt, lg})
+	mux.Handle("GET /ws", wsHandler{mt, lg})
+	mux.Handle("GET /api", apiHandler{mt, lg})
 
 	mux.Handle("GET /static/", http.FileServerFS(static))
 
@@ -96,5 +96,20 @@ func (h wsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		time.Sleep(3 * time.Second)
+	}
+}
+
+type apiHandler struct {
+	monitor *monitor.Monitor
+	l       *slog.Logger
+}
+
+func (h apiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	enc := json.NewEncoder(w)
+	w.Header().Set("content-type", "application/json")
+
+	if err := enc.Encode(h.monitor); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		h.l.Error(err.Error())
 	}
 }
