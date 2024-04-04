@@ -75,13 +75,3 @@ func parseMemoryValue(v string) int {
 	n, _ := strconv.Atoi(v[:len(v)-3])
 	return n
 }
-
-func ConvertToGib(kb int) float32 {
-	return float32(kb) / 1024 / 1024
-}
-
-func cleanValue(v string) string {
-	clean := strings.ReplaceAll(v, "\x00", " ")
-
-	return strings.TrimSpace(clean)
-}

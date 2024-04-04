@@ -52,6 +52,21 @@ templ Monitor(m *monitor.Monitor) {
 			</div>
 		</div>
 		<div class={ section() }>
+			<p>CPU: </p>
+			<p>{ fmt.Sprintf("%s (%d)",m.CPU.ModelName, m.CPU.Cores) }</p>
+		</div>
+		<div class={ section() }>
+			<p>Storage: </p>
+			<div class={ sectionItem() }>
+				for i, d := range m.Drives {
+					<p>{ fmt.Sprintf("%s (%.2f GiB)", d.Identifier, monitor.ConvertToGib(d.Total)) }</p>
+					if i < len(m.Drives) -1 {
+						<p>{ fmt.Sprint("|") }</p>
+					}
+				}
+			</div>
+		</div>
+		<div class={ section() }>
 			<p>Uptime: </p>
 			<p>{ monitor.FormatUptime(m.Uptime) }</p>
 		</div>
